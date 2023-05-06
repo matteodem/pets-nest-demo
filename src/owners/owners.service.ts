@@ -4,11 +4,13 @@ import { UpdateOwnerInput } from './dto/update-owner.input';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Owner } from './entities/owner.entity';
+import { Pet } from 'src/pets/pet.entity';
 
 @Injectable()
 export class OwnersService {
   constructor(
     @InjectRepository(Owner) private ownersRepository: Repository<Owner>,
+    @InjectRepository(Pet) private petsRepository: Repository<Pet>,
   ) {}
 
   create(createOwnerInput: CreateOwnerInput) {
@@ -17,13 +19,20 @@ export class OwnersService {
     return this.ownersRepository.save(newOwner);
   }
 
-  findAll() {
+  async findAll() {
+    console.log(await this.ownersRepository.find());
     return this.ownersRepository.find();
   }
 
   findOne(id: number) {
     return this.ownersRepository.findOneOrFail({
       where: [{ id }],
+    });
+  }
+
+  findPetsForOwner(ownerId: number) {
+    return this.petsRepository.findBy({
+      ownerId,
     });
   }
 
