@@ -20,7 +20,6 @@ export class OwnersService {
   }
 
   async findAll() {
-    console.log(await this.ownersRepository.find());
     return this.ownersRepository.find();
   }
 
